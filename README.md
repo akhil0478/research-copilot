@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Research Copilot
 
 ## 🚀 Problem
@@ -60,31 +60,29 @@ source backend-env/bin/activate
 pip install -r requirements.txt
 uvicorn main:app --reload
 
-2.Start n8n
+### 2.Start n8n
 docker run -d \
 --name n8n \
 -p 5678:5678 \
 -v n8n_data:/home/node/.n8n \
 n8nio/n8n
 
-3. Setup MCP Server
+### 3. Setup MCP Server
 cd mcp-server
 npm install
 
-⚠️ Challenges Faced
-FAISS corruption due to concurrent writes
-MCP integration issues
-Retrieval bias (same paper dominating results)
-Solutions
-Implemented thread locks for FAISS
-Fixed MCP tool protocol
-Added diversity filtering in retrieval
+###⚠️ Challenges Face
+-FAISS corruption due to concurrent writes
+-MCP integration issues
+-Retrieval bias (same paper dominating results)
+-Solutions
+-Implemented thread locks for FAISS
+-Fixed MCP tool protocol
+-Added diversity filtering in retrieval
 
 📚 References
-FAISS
-Sentence Transformers
-arXiv API
-MCP SDK
+-FAISS
+-Sentence Transformers
+-arXiv API
+-MCP SDK
 =======
-# research-copilot
->>>>>>> e2fb0b152bf5c0f7a925253e737cab7c742a062c
