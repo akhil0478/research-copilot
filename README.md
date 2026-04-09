@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Research Copilot
 
 ## 🚀 Problem
@@ -84,3 +85,6 @@ FAISS
 Sentence Transformers
 arXiv API
 MCP SDK
+=======
+# research-copilot
+>>>>>>> e2fb0b152bf5c0f7a925253e737cab7c742a062c
