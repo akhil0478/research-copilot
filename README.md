@@ -1,88 +1,192 @@
+# 🧠 Research Copilot
 
-# Research Copilot
+## 🚀 Business Problem
 
-## 🚀 Problem
+Researchers face significant difficulty in keeping up with the rapidly growing volume of academic papers. Platforms like Google Scholar and arXiv provide retrieval but lack:
 
-Researchers struggle to keep up with the rapidly growing number of research papers.  
-Existing tools like Google Scholar retrieve papers but do not analyze them or identify research gaps.
+- structured understanding of multiple papers
+- comparison across methods
+- identification of research gaps
+- conversational interaction
+
+This results in inefficient research workflows and missed insights.
 
 ---
 
-## 💡 Solution
+## 💡 Possible Solution
 
-An AI-powered research assistant that:
+A system that can:
 
-- Fetches research papers dynamically from arXiv
-- Stores them in a vector database (FAISS)
-- Enables conversational querying
-- Identifies insights and research gaps using an LLM
+- dynamically fetch research papers
+- store them in a structured knowledge base
+- allow natural language querying
+- analyze multiple papers simultaneously
+- identify trends and research gaps
 
 ---
 
 ## 🛠️ Implemented Solution
 
-The system integrates:
+We built a **Research Copilot**, an AI-powered assistant that:
 
-- n8n for paper ingestion
-- FastAPI backend for processing
-- FAISS for vector search
-- MCP for tool-based interaction
-- Claude for reasoning
+1. Fetches research papers from arXiv using a workflow engine
+2. Extracts and chunks paper content
+3. Converts text into embeddings using Sentence Transformers
+4. Stores embeddings in a FAISS vector database
+5. Enables semantic retrieval via FastAPI
+6. Uses MCP (Model Context Protocol) to expose tools
+7. Allows Claude to reason over retrieved papers
 
 ---
 
 ## 🧱 Tech Stack
 
-- FastAPI  
-- FAISS  
-- Sentence Transformers  
-- n8n  
-- MCP (Model Context Protocol)  
-- Claude  
+- **Backend**: FastAPI (Python)
+- **Vector Database**: FAISS
+- **Embeddings**: Sentence Transformers (`all-MiniLM-L6-v2`)
+- **Workflow Automation**: n8n (Docker)
+- **Tool Layer**: MCP (Model Context Protocol)
+- **LLM**: Claude Desktop
+- **Data Source**: arXiv API
 
 ---
 
 ## 🏗️ Architecture
+User → Claude → MCP → Backend → FAISS
+↘ n8n → arXiv
 
-User → Claude → MCP → Backend → FAISS  
-                     ↘ n8n → arXiv
+### Explanation:
+
+- **n8n** handles paper ingestion from arXiv  
+- **Backend (FastAPI)** processes and stores data  
+- **FAISS** enables fast similarity search  
+- **MCP server** exposes tools (`query_papers`, `fetch_papers`)  
+- **Claude** performs reasoning and analysis  
 
 ---
 
-## ▶️ How to Run Locally
+![Architecture](docs/architecture.png)
 
-### 1. Start Backend
+---
+
+## ⚙️ How to Run Locally
 
 ```bash
+# 1. Clone Repository
+git clone https://github.com/akhil0478/research-copilot.git
+cd research-copilot
+
+# 2. Start Backend
 cd backend
 python3 -m venv backend-env
 source backend-env/bin/activate
 pip install -r requirements.txt
 uvicorn main:app --reload
 
-### 2.Start n8n
+# 3. Start n8n (Docker)
 docker run -d \
 --name n8n \
 -p 5678:5678 \
 -v n8n_data:/home/node/.n8n \
 n8nio/n8n
 
-### 3. Setup MCP Server
-cd mcp-server
+# 4. Setup MCP Server
+cd ../mcp-server
 npm install
 
-###⚠️ Challenges Face
--FAISS corruption due to concurrent writes
--MCP integration issues
--Retrieval bias (same paper dominating results)
--Solutions
--Implemented thread locks for FAISS
--Fixed MCP tool protocol
--Added diversity filtering in retrieval
+# 5. Configure Claude MCP (edit this file manually)
+# ~/Library/Application Support/Claude/claude_desktop_config.json
 
-📚 References
--FAISS
--Sentence Transformers
--arXiv API
--MCP SDK
-=======
+# Add:
+# {
+#   "mcpServers": {
+#     "local-mcp": {
+#       "command": "/opt/homebrew/bin/node",
+#       "args": ["/absolute/path/to/research-copilot/mcp-server/server.js"]
+#     }
+#   }
+# }
+
+# 6. Restart Claude Desktop (Cmd + Q → reopen)
+## 📸 Screenshots & 🎥 Demo
+
+### Claude Output
+![Claude Output](docs/screenshots/screenshot1.png)
+
+### n8n Workflow
+![n8n Workflow](docs/screenshots/screenshot2.png)
+
+### Demo Recording
+(Add your video link here)
+
+## ⚠️ Problems Faced & Solutions
+
+### 1. FAISS Corruption
+Problem:
+Concurrent read/write caused memory corruption and index failure.
+
+Solution:
+- Introduced thread locks for FAISS operations
+- Ensured sequential ingestion and querying
+
+---
+
+### 2. Retrieval Bias (Same Paper Repeated)
+Problem:
+Vector search returned chunks from a single dominant paper.
+
+Solution:
+- Increased search breadth (k = 30)
+- Applied diversity filtering (one chunk per paper)
+
+---
+
+### 3. MCP Server Disconnection
+Problem:
+Incorrect file paths after restructuring caused server crashes.
+
+Solution:
+- Fixed absolute path in Claude config
+- Verified server startup via logs
+
+---
+
+### 4. Docker Networking Issues
+Problem:
+n8n could not reach backend using localhost.
+
+Solution:
+- Used host.docker.internal for cross-container communication
+
+## 📊 Key Features & 📈 Success Metrics
+
+### Key Features
+- Dynamic paper ingestion
+- Persistent vector database
+- Semantic search
+- Multi-paper analysis
+- Research gap identification
+- Tool-based LLM interaction
+
+### Success Metrics
+- Retrieval of multiple distinct papers
+- Accurate summarization across papers
+- Identification of differences and gaps
+- Real-time knowledge expansion via fetch
+
+## 🔮 Future Scope
+
+- Paper ranking by relevance and recency
+- Automatic re-query agent loop
+- Web-based UI dashboard
+- Domain-specific fine-tuning
+- Citation graph analysis
+
+## 📚 References
+
+- FAISS (Facebook AI Similarity Search)
+- Sentence Transformers
+- arXiv API
+- Model Context Protocol (MCP)
+- Claude Desktop
+
