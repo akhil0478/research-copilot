@@ -110,12 +110,7 @@ npm install
 # 6. Restart Claude Desktop (Cmd + Q → reopen)
 ## 📸 Screenshots & 🎥 Demo
 
-### Claude Output
-![Claude Output](docs/screenshots/screenshot1.png)
-
-### n8n Workflow
-![n8n Workflow](docs/screenshots/screenshot2.png)
-
+https://drive.google.com/drive/folders/1soG3T8n5uceoaVARJrFsBv-NP5qpLoZF?usp=sharing
 ### Demo Recording
 (Add your video link here)
 
